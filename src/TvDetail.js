@@ -1,338 +1,445 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import axios from 'axios'
-import { useLocation } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
-import './Row'
+import "./Row";
 import Spinner from "react-spinkit";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
 import Youtube from "react-youtube";
-import Stats from "./detail-components/Stats";
-import TvStats from "./detail-components/TvStats";
-import './Detail.css'
+import "./Detail.css";
 import Cast from "./detail-components/Cast";
-import { useDispatch,useSelector } from "react-redux";
-// import { setDetails } from "./features/movie/movieSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { DetailCard } from "./DetailCard";
 import { setCast } from "./features/movie/castSlice";
-import AllSeason from "./detail-components/AllSeason";
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
   Link,
-  useRouteMatch,
-  withRouter
-
 } from "react-router-dom";
-import { fetchAsyncShowDetail,fetchShowSeasonDetail, getSelectedMovieOrShow } from "./features/movie/movieSlice";
+import {
+  fetchAsyncShowDetail,
+  fetchShowSeasonDetail,
+  getSelectedMovieOrShow,
+} from "./features/movie/movieSlice";
 export default function TvDetail() {
-  // const [detail,setDetail] = useState([]);
-  // const [trailer,setTrailer] = useState([]);
-  const [loading,setLoading] = useState(true);
-  const {id} = useParams();
-  let data = useLocation();
-  const dispatch = useDispatch()
-  const baseUrl = "https://image.tmdb.org/t/p/original"
+  const [trailer, setTrailer] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
 
-  const detail= useSelector(getSelectedMovieOrShow);
-  // console.log(detail)
+  const dispatch = useDispatch();
+  // const baseUrl = "https://image.tmdb.org/t/p/original";
+  const baseUrl = "https://ik.imagekit.io/1aafk6gx3bk/poster-image/";
+
+  const detail = useSelector(getSelectedMovieOrShow);
+
+  function truncate(str, n) {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+  }
   const opts = {
-    height: "390",
+    height: "450",
     width: "100%",
     playerVars: {
-      autoplay: 0
-    }
+      autoplay: 0,
+    },
   };
 
-//   const fetchData1 = async()=>{
-//     const response = await axios.get(`https://api.themoviedb.org/3/tv/${data.state.id}?api_key=74de71d03e661d70414e23b100e51515&language=en-US`).catch((e)=>{
-//       console.log('error in fetching')
-//     })
-//     setDetail(response.data)
-//     // dispatch(setDetails(response.data))
-//    }
+  const fetchData = async () => {
+    const response = await axios
+      .get(
+        `https://api.themoviedb.org/3/tv/${id}/credits?api_key=74de71d03e661d70414e23b100e51515&language=en-US`
+      )
+      .catch((e) => {
+        console.log("error in fetching");
+      });
+    dispatch(setCast(response.data.cast));
+  };
 
-   const fetchData = async() =>{
-    const response = await axios.get(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=74de71d03e661d70414e23b100e51515&language=en-US`).catch((e)=>{
-      
-    console.log('error in fetching')
-    })
-    // console.log("cast:data",response.data)
-    dispatch(setCast(response.data.cast))
-}
+  const fetchTrailer = async (id) => {
+    const response = await axios
+      .get(
+        `https://api.themoviedb.org/3/tv/${id}/videos?api_key=74de71d03e661d70414e23b100e51515&language=en-US`
+      )
+      .catch((e) => {
+        console.log("error in fetching");
+      });
+    setTrailer(response.data.results);
+  };
 
-// const fetchTrailer = async() =>{
-//   const response = await axios.get(`https://api.themoviedb.org/3/tv/${data.state.id}/videos?api_key=74de71d03e661d70414e23b100e51515&language=en-US`).catch((e)=>{
-//     console.log('error in fetching')
-//   })
-//   setTrailer(response.data.results[0]?.key)
-//   // console.log(response.data.results[0]?.key)
-// }
-// const size = detail.seasons;
-// console.log("props",props)
-// console.log("size",size.length)
-
-  useEffect(()=>{
-    // fetchData1();
+  useEffect(() => {
     fetchData();
-    // fetchTrailer();
+    fetchTrailer(id);
     dispatch(fetchAsyncShowDetail(id));
-    dispatch(fetchShowSeasonDetail(id));
-    setTimeout(()=>setLoading(false),2000)
-  },[dispatch,id]);
+
+    setTimeout(() => setLoading(false), 3500);
+  }, [dispatch, id]);
+
+  const genre = detail.genres;
+
+  var year = new Date(detail.first_air_date).getFullYear();
+  var lastyear = new Date(detail.last_air_date).getFullYear();
+
+  const trailers = trailer.filter((item) => item.type === "Trailer");
 
 
-  const genre = detail.genres
- 
-  var year = new Date(detail.first_air_date).getFullYear()
-  var lastyear = new Date(detail.last_air_date).getFullYear()
-//   {
-//     detail.networks &&   detail.networks.map((i)=>{
-//       // console.log(i.name)
-//     })
-//   }
-
-  console.log(detail)
-  if(loading){
+  if (loading) {
     return (
       <AppLoading>
-      <AppLoadingContents>
-      <Spinner name="line-spin-fade-loader" />
-      </AppLoadingContents>
+        <AppLoadingContents>
+          <Spinner name="line-spin-fade-loader" />
+        </AppLoadingContents>
       </AppLoading>
-    )
-   
+    );
   }
 
-  return(
+  return (
     <>
-    <Container>
-      <div className='background'>
-      <img src={`${baseUrl}${detail.backdrop_path}`}/>
-      </div>
-      <Detail>
-      <ImageTitle>
-        <img src={`${baseUrl}${detail.poster_path}`} />
-      </ImageTitle>
-      <Description>
-      <Title>
-        <div className='title'>
-        <p> {detail.original_title || detail.name} </p>
+      <Container>
+        <div className="background">
+          <img src={`${baseUrl}${detail.backdrop_path}`} />
         </div>
-        <div className='year'>
-        {
-         <p>({year})</p>
-        }
+        <Detail>
+          <ImageTitle>
+            <img src={`${baseUrl}${detail.poster_path}`} />
+          </ImageTitle>
+          <Description>
+            <Title>
+              <div className="title">
+                <h1> {detail.original_title || detail.name} </h1>
+              </div>
+              <div className="year">{<p>({year})</p>}</div>
+            </Title>
+            <Rating>
+              <div className="release">
+                <p>{detail.release_date}</p>
+              </div>
+              <div className="genre">
+                {detail.genres &&
+                  genre.map((g) => {
+                    return (
+                      <div className="genre-type">
+                        <span>•</span>
+                        <span>{g.name}</span>
+                      </div>
+                    );
+                  })}
+              </div>
+            </Rating>
+            <Tagline>
+              <p>
+                <i>{detail.tagline}</i>
+              </p>
+            </Tagline>
+            <Overview>
+              <p className="Title">Overview</p>
+              <p className="content">{truncate(detail?.overview, 250)}</p>
+            </Overview>
+            <Credit>
+              <div className="container">
+                <div className="director">
+                  <h4>Creator</h4>
+                  {detail.created_by.map((item) => {
+                    return (<>
+                      <span>•</span><span>{item.name}</span>
+                    </>);
+                  })}
+                </div>
+              </div>
+            </Credit>
+          </Description>
+        </Detail>
+      </Container>
+      <Container2>
+        <div className="cast">
+          <Cast />
         </div>
-      </Title>
-      <Rating>
-      <div className='release'>
-          <p>{detail.release_date}</p>
-      </div>
-      <div className='origin'>
-        {/* <p>{ detail.production_companies && 
-          detail.production_countries[0].name}</p> */}
-      </div>
-      <div className='genre'>
-      <p>•</p>
-      { detail.genres && 
-        genre.map((g)=>{
-          return(
-            <div className='genre-type'>
-              <p>{g.name}</p>
-            </div>
-          )
-        })
-      }
-      </div>
-      <div className='runtime'>
-              <p>{detail.episode_run_time && detail.episode_run_time[1]} min</p>
-             </div>
-      </Rating>
-      <Tagline>
-       <p>{detail.tagline}</p>
-       </Tagline>
-       <Overview>
-        <p className='Title'>Overview</p>
-        <p className='content'>{detail.overview}</p>
-      </Overview>
-      </Description>
-      </Detail>
-    </Container>
-    <Container2>
-    <div className='cast'>
-    <Cast/>
-    </div>
-    <TvStats/>
-    </Container2>
-      <CastContainer>
-        <div className='Header'>
-          <h3>More Seasons</h3>
-        </div>
-        {/* <div className='season-container'> */}
-        {/* <div class="season-detail"> */}
-      
-        
-        {
-               detail.seasons && 
-              <><div className='season-container'>
-            <div className='season-poster'>
-              <img src={`https://image.tmdb.org/t/p/original/${detail.seasons[detail.seasons.length - 1].poster_path}`} />
-            </div>
-            <div class="season-detail">
-              <div class="season-name">
-                <h3>{detail.seasons[detail.seasons.length - 1].name}</h3>
+      </Container2>
+      <LowerContainer>
+        <CastContainer>
+          <Card>
+            <div className="card">
+              <div className="Header">
+                {/* <span><MdOutlineArrowForwardIos/></span> */}
+                <h1>Last Aired</h1>
               </div>
-              <div className="episode-count">
-                <p>{lastyear}</p>
-                <p>{detail.seasons[detail.seasons.length - 1].episode_count} Episodes</p>
-              </div>
-              <div className="seasons-data">
-                <p>{detail.seasons[detail.seasons.length - 1].overview}</p>
-              </div>
+              {detail.seasons && (
+                <>
+                  <div className="season-container">
+                    <div className="season-poster">
+                      <img
+                        src={`${baseUrl}${
+                          detail.seasons[detail.seasons.length - 1].poster_path
+                        }`}
+                      />
+                    </div>
+                    <div class="season-detail">
+                      <div class="season-name">
+                        <h3>
+                          {detail.seasons[detail.seasons.length - 1].name}
+                        </h3>
+                      </div>
+                      <div className="episode-count">
+                        <p>{lastyear}</p>
+                        <p>|</p>
+                        <p>
+                          {
+                            detail.seasons[detail.seasons.length - 1]
+                              .episode_count
+                          }{" "}
+                          Episodes
+                        </p>
+                      </div>
+                      <div className="seasons-data">
+                        <p>
+                          {truncate(
+                            detail.seasons[detail.seasons.length - 1]?.overview,
+                            200
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="all-season">
+                    <Link
+                      to={{
+                        pathname: `/tv/${detail.id}/seasons`,
+                      }}
+                    >
+                      {" "}
+                      <div className="redirect">
+                      <span><MdOutlineArrowForwardIos/></span><h3>View All Seasons</h3>
+                      </div>
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
+          </Card>
+        </CastContainer>
+        <Padder>
+          <DetailCard />
+        </Padder>
+        <Container3>
+          <div className="trailer-title">
+            {/* <span><MdOutlineArrowForwardIos/></span> */}
+            <h1>Trailer</h1>
           </div>
-          <div className="all-season">
-          {/* <Route path={`/tv/seasons`} component={AllSeason} >
-            <p>dss</p>
-          </Route> */}
-          <Link to={{
-                pathname:`/tv/${detail.id}/seasons`,
-                state:detail.seasons
-               
-            }}
-            > <h3>View All Seasons</h3></Link>
-          
-            </div></>
-              
-        } 
-        {/* </div> */}
-        {/* </div> */}
-      </CastContainer>
-    
-    {/* <Container3>
-      <div className='trailer'>
-      <Youtube videoId={trailer} opts={opts} />
-      </div>
-      </Container3> */}
+          <div className="trailer">
+            <Youtube videoId={trailers[0].key} opts={opts} />
+          </div>
+        </Container3>
+      </LowerContainer>
     </>
-  )
-// return(
-//     <h1>HELLO</h1>
-// )
+  );
 }
 
-const CastContainer = styled.div`
-padding: 0 calc(3.5vw + 10px);
-background:pink;
-.season-container{
-  display:flex;
-}
-.season-poster{
-  height: 200px;
-    width: 180px;
-    padding:5px;
-}
-img {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.season-name{
-padding:5px;
-padding-left:10px;font-size:22px;
-display:flex;
-}
-.seasons-data{
-  padding:10px;
-  display:flex;
-}
-
-.episode-count{
-  display:flex;
-  padding:5px;
-padding-left:5px;
-  p{
-    margin:5px;
+const Card = styled.div`
+  padding-left: 20px;
+  .card {
+    background-color: #eeeeee;
   }
-}
-
-.all-season{
-padding:10px;
-height:20px;
-}
 `;
 
+const Credit = styled.div`
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-right: 50px;
+  margin-left: 40px;
 
-const Container2 =styled.div`
-display:flex;
-justify-content: space-between;
-{/* margin-left: 60px; */}
-padding: 0 calc(3.5vw + 10px);
-padding-top:50px;
-background:white;
+  .container {
+    height: 50px;
+    display: flex;
+    padding: 5px;
+    
+  }
+
+  .director{
+    margin: 2px 20px 2px 5px
+    
+  }
+
+
+  .writer {
+    margin: 2px 20px 2px 20px;
+  }
+  span {
+    margin: 5px;
+    font-size: 18px;
+    line-height: 10px;
+  }
+ 
+  font-size: 18px;
+`;
+
+const Padder = styled.div``;
+
+const LowerContainer = styled.div`
+ 
+  background-color: white;
+  padding: 0 calc(3.5vw + 10px);
+`;
+
+const CastContainer = styled.div`
+  width: 70vw;
+  padding-top: 30px;
+
+  .season-container {
+    display: flex;
+    padding-left: 2px;
+  }
+  .season-poster {
+    height: 200px;
+    width: 180px;
+    padding: 5px;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .season-name {
+    margin-top: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 22px;
+    display: flex;
+  }
+  .seasons-data {
+    margin-top: 10px;
+    padding: 10px;
+    display: flex;
+    content: justify;
+    text-align: justify;
+  }
+
+  .episode-count {
+    margin-top: 10px;
+    display: flex;
+    padding: 5px;
+    padding-left: 5px;
+    p {
+      margin: 5px;
+    }
+  }
+
+  .all-season {
+    padding: 10px;
+    height: 20px;
+  }
+  .Header {
+    display: flex;
+    padding: 2px 0px 5px 3px;
+    span {
+      font-size: 30px;
+      padding-top: 7px;
+      font-weight: bold;
+    }
+  }
+
+  .redirect {
+    h3,
+    h3:link,
+    h3:visited,
+    h3:active {
+      color: black;
+      text-decoration: border;
+      cursor: cursor;
+      font-weight: 550;
+    }
+    display: flex;
+
+    span{
+      padding-top:5px;
+    }
+  }
+`;
+
+const Container2 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 0 calc(3.5vw + 10px);
+  padding-top: 50px;
+  background: white;
 `;
 
 const Container3 = styled.div`
-display:flex;
-background:white;
-padding: 0 calc(3.5vw + 10px);
-.trailer{
-  padding:20px;
-  margin-top:50px;
-  width:600px;
-}
+  margin-top: 20px;
+  padding: 2px 0px 35px 20px;
+  .trailer-title {
+    display: flex;
+  }
+
+  .trailer {
+    margin-top: 10px;
+    width: 52vw;
+  }
 `;
 
 const Overview = styled.div`
-margin-top:20px;
-margin-left:40px;
-margin-right:50px;
-padding-right:100px;
-p{
-  margin-left:9px;
-  text-align: justify;
-}
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-right: 50px;
+  padding-right: 100px;
+  p {
+    margin-left: 9px;
+    text-align: justify;
+  }
 
-.Title{
-  font-weight:650;
-  margin-bottom:20px;
-}
+  .Title {
+    font-size: 20px;
+    font-weight: 650;
+    margin-bottom: 20px;
+  }
+  .content {
+    font-size: 18px;
+  }
 `;
 
-
 const Tagline = styled.div`
-margin-left:40px;
-margin-top:20px;
-text-align: left;
-margin-right:50px;
-padding:02px;
+  margin-left: 40px;
+  margin-top: 30px;
+  text-align: left;
+  margin-right: 50px;
+  padding: 02px;
 
-p{
-  margin-left:9px;
-}
-`
+  p {
+    font-size: 21px;
+    margin-left: 9px;
+  }
+`;
 
 const Rating = styled.div`
-margin-left:40px;
-display:flex;margin-right:50px;
-margin-top:20px;
-`; 
+  margin-left: 40px;
+  display: flex;
+  margin-right: 50px;
+  margin-top: 57px;
+  span {
+    font-weight: bold;
+    font-size: 17px;
+    padding: 0px 2px 0px 2px;
+  }
+`;
 
 const Title = styled.div`
-display:flex;
-margin-right:50px;
-flex-direction:row;
-margin-left:40px;
-margin-top:42px;
+  display: flex;
+  margin-right: 50px;
+  flex-direction: row;
+  margin-left: 40px;
+  margin-top: 42px;
+  h1 {
+    line-height: 80%;
+  }
+  .year{
+    {/* margin-top: 10px; */}
+    line-height: 173%;
+  }
 `;
 
 const Detail = styled.div`
-display:flex;
-margin-top:60px;
+  display: flex;
+  margin-top: 60px;
 `;
 
 const Description = styled.div`
-width:100%;
+  width: 100%;
 `;
 
 const ImageTitle = styled.div`
@@ -341,26 +448,19 @@ const ImageTitle = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
-    
   }
 `;
 
-const DetailContainer = styled.div`
-
-const ImageComponent = styled.div`
-
 const Container = styled.div`
- padding: 0 calc(3.5vw + 10px);
- color:white;
-  margin-bottom:50px;
-
-
-`
+  padding: 0 calc(3.5vw + 10px);
+  color: white;
+  margin-bottom: 50px;
+`;
 const Details = styled.div`
-h1{
-  color:black;
-}
-`
+  h1 {
+    color: black;
+  }
+`;
 const AppLoading = styled.div`
   display: grid;
   place-items: center;
@@ -373,4 +473,5 @@ const AppLoadingContents = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;`;
+  align-items: center;
+`;
