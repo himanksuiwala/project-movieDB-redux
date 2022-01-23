@@ -2,24 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import styled from "styled-components";
-import "./Row";
+import "../Components/Row";
 import Spinner from "react-spinkit";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import Youtube from "react-youtube";
-import "./Detail.css";
-import Cast from "./detail-components/Cast";
+import "../public/Row.css";
+import Cast from "../Components/Cast";
 import { useDispatch, useSelector } from "react-redux";
-import { DetailCard } from "./DetailCard";
-import { setCast } from "./features/movie/castSlice";
-import {
-  BrowserRouter as Router,
-  Link,
-} from "react-router-dom";
+import { DetailCard } from "../Components/DetailCard";
+import { setCast } from "../features/movie/castSlice";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import {
   fetchAsyncShowDetail,
-  fetchShowSeasonDetail,
   getSelectedMovieOrShow,
-} from "./features/movie/movieSlice";
+} from "../features/movie/movieSlice";
 export default function TvDetail() {
   const [trailer, setTrailer] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +26,14 @@ export default function TvDetail() {
   const baseUrl = "https://ik.imagekit.io/1aafk6gx3bk/poster-image/";
 
   const detail = useSelector(getSelectedMovieOrShow);
+
+  function doctitle(title) {
+    document.title = `${title} (TV Series)`;
+  }
+
+  {
+    detail && doctitle(detail.original_title || detail.name);
+  }
 
   function truncate(str, n) {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
@@ -68,7 +72,7 @@ export default function TvDetail() {
     fetchData();
     fetchTrailer(id);
     dispatch(fetchAsyncShowDetail(id));
-
+    window.scrollTo(0, 0);
     setTimeout(() => setLoading(false), 3500);
   }, [dispatch, id]);
 
@@ -78,7 +82,6 @@ export default function TvDetail() {
   var lastyear = new Date(detail.last_air_date).getFullYear();
 
   const trailers = trailer.filter((item) => item.type === "Trailer");
-
 
   if (loading) {
     return (
@@ -115,7 +118,7 @@ export default function TvDetail() {
                 {detail.genres &&
                   genre.map((g) => {
                     return (
-                      <div className="genre-type">
+                      <div key={g.id} className="genre-type">
                         <span>•</span>
                         <span>{g.name}</span>
                       </div>
@@ -137,9 +140,12 @@ export default function TvDetail() {
                 <div className="director">
                   <h4>Creator</h4>
                   {detail.created_by.map((item) => {
-                    return (<>
-                      <span>•</span><span>{item.name}</span>
-                    </>);
+                    return (
+                      <div key={item.id}>
+                        <span>•</span>
+                        <span>{item.name}</span>
+                      </div>
+                    );
                   })}
                 </div>
               </div>
@@ -161,7 +167,7 @@ export default function TvDetail() {
                 <h1>Last Aired</h1>
               </div>
               {detail.seasons && (
-                <>
+                <LastSeason>
                   <div className="season-container">
                     <div className="season-poster">
                       <img
@@ -170,8 +176,8 @@ export default function TvDetail() {
                         }`}
                       />
                     </div>
-                    <div class="season-detail">
-                      <div class="season-name">
+                    <div className="season-detail">
+                      <div className="season-name">
                         <h3>
                           {detail.seasons[detail.seasons.length - 1].name}
                         </h3>
@@ -205,11 +211,14 @@ export default function TvDetail() {
                     >
                       {" "}
                       <div className="redirect">
-                      <span><MdOutlineArrowForwardIos/></span><h3>View All Seasons</h3>
+                        <span>
+                          <MdOutlineArrowForwardIos />
+                        </span>
+                        <h3>View All Seasons</h3>
                       </div>
                     </Link>
                   </div>
-                </>
+                </LastSeason>
               )}
             </div>
           </Card>
@@ -217,24 +226,46 @@ export default function TvDetail() {
         <Padder>
           <DetailCard />
         </Padder>
-        <Container3>
-          <div className="trailer-title">
-            {/* <span><MdOutlineArrowForwardIos/></span> */}
-            <h1>Trailer</h1>
-          </div>
-          <div className="trailer">
-            <Youtube videoId={trailers[0].key} opts={opts} />
-          </div>
-        </Container3>
+        {trailers[0] ? (
+          <Container3>
+            <div className="trailer-title">
+              {/* <span><MdOutlineArrowForwardIos/></span> */}
+              <h1>Trailer</h1>
+            </div>
+            <div className="trailer">
+              <Youtube videoId={trailers[0].key} opts={opts} />
+            </div>
+          </Container3>
+        ) : (
+          ""
+        )}
       </LowerContainer>
     </>
   );
 }
 
+const LastSeason = styled.div`
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+  a,
+  a:hover,
+  a:active,
+  a:visited {
+    color: black;
+    text-decoration: none;
+  }
+`;
+
 const Card = styled.div`
   padding-left: 20px;
   .card {
     background-color: #eeeeee;
+    border-radius: 10px;
   }
 `;
 
@@ -248,14 +279,11 @@ const Credit = styled.div`
     height: 50px;
     display: flex;
     padding: 5px;
-    
   }
 
-  .director{
-    margin: 2px 20px 2px 5px
-    
+  .director {
+    margin: 2px 20px 2px 5px;
   }
-
 
   .writer {
     margin: 2px 20px 2px 20px;
@@ -265,14 +293,13 @@ const Credit = styled.div`
     font-size: 18px;
     line-height: 10px;
   }
- 
+
   font-size: 18px;
 `;
 
 const Padder = styled.div``;
 
 const LowerContainer = styled.div`
- 
   background-color: white;
   padding: 0 calc(3.5vw + 10px);
 `;
@@ -346,8 +373,8 @@ const CastContainer = styled.div`
     }
     display: flex;
 
-    span{
-      padding-top:5px;
+    span {
+      padding-top: 5px;
     }
   }
 `;
@@ -427,8 +454,10 @@ const Title = styled.div`
   h1 {
     line-height: 80%;
   }
-  .year{
-    {/* margin-top: 10px; */}
+  .year {
+     {
+      /* margin-top: 10px; */
+    }
     line-height: 173%;
   }
 `;

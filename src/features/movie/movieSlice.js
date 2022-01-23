@@ -2,25 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 const API_KEY = "74de71d03e661d70414e23b100e51515";
 
-//   const initialState = {
-//     detail:[]
-// }
-
-// const movieSlice = createSlice({
-//     name:"details",
-//     initialState,
-//     reducers:{
-//         setDetails:(state,action) =>{
-//             state.detail = action.payload;
-//         }
-//     }
-// })
-
-// export const {setDetails} = movieSlice.actions;
-
-// export const selectDetails = (state) => state.details.detail;
-
-// export default movieSlice.reducer;
 
 /////////////////////////////////////////////////////////////////
 export const fetchAsyncSearch = createAsyncThunk(
@@ -151,10 +132,10 @@ const movieSlice = createSlice({
   },
   extraReducers: {
     [fetchAsyncMovies.pending]: () => {
-      console.log("Pending");
+      // console.log("Pending");
     },
     [fetchAsyncMovies.fulfilled]: (state, { payload }) => {
-      console.log("Fetched Successfully!");
+      // console.log("Fetched Successfully!");
       return { ...state, movies: payload };
     },
     [fetchAsyncMovies.rejected]: () => {
@@ -163,14 +144,14 @@ const movieSlice = createSlice({
 
     ///For Netflix
     [fetchAsyncNETFLIXtv.fulfilled]: (state, { payload }) => {
-      console.log("Netflix Orignals Fetched Succesfully");
+      // console.log("Netflix Orignals Fetched Succesfully");
       return { ...state, netflix_tv: payload };
     },
     [fetchAsyncNETFLIXtv.rejected]: () => {
-      console.log("Rejected!");
+      // console.log("Rejected!");
     },
     [fetchAsyncNETFLIXmovie.fulfilled]: (state, { payload }) => {
-      console.log("Netflix MOVIE Fetched Succesfully");
+      // console.log("Netflix MOVIE Fetched Succesfully");
       return { ...state, netflix_movie: payload };
     },
     [fetchAsyncNETFLIXmovie.rejected]: () => {
@@ -179,14 +160,14 @@ const movieSlice = createSlice({
 
     ///For PrimeVideos
     [fetchAsyncPRIMEtv.fulfilled]: (state, { payload }) => {
-      console.log("TV shows from PrimeVideos fetched");
+      // console.log("TV shows from PrimeVideos fetched");
       return { ...state, primetv: payload };
     },
     [fetchAsyncPRIMEtv.rejected]: () => {
       console.log("Rejected PRIMEVIDEOS!");
     },
     [fetchAsyncPRIMEmovie.fulfilled]: (state, { payload }) => {
-      console.log("MOVIES shows from PrimeVideos fetched");
+      // console.log("MOVIES shows from PrimeVideos fetched");
       return { ...state, primemovie: payload };
     },
     [fetchAsyncPRIMEmovie.rejected]: () => {
@@ -195,7 +176,7 @@ const movieSlice = createSlice({
 
     ///For Hotstar
     [fetchAsyncHOTSTARmovie.fulfilled]: (state, { payload }) => {
-      console.log("Movie shows from Hotstar fetched");
+      // console.log("Movie shows from Hotstar fetched");
       return { ...state, hotstar_movie: payload };
     },
     [fetchAsyncHOTSTARmovie.rejected]: () => {
@@ -203,7 +184,7 @@ const movieSlice = createSlice({
     },
 
     [fetchAsyncHOTSTARtv.fulfilled]: (state, { payload }) => {
-      console.log("Tv shows from Hotstar fetched");
+      // console.log("Tv shows from Hotstar fetched");
       return { ...state, hotstar_tv: payload };
     },
     [fetchAsyncHOTSTARtv.rejected]: () => {
@@ -212,16 +193,16 @@ const movieSlice = createSlice({
 
     /////////////////////////////////////////////
     [fetchAsyncMoviesDetail.fulfilled]: (state, { payload }) => {
-      console.log("Movie Detail Fetched Successfully!");
+      // console.log("Movie Detail Fetched Successfully!");
       return { ...state, selectMovieOrShow: payload };
     },
     [fetchAsyncShowDetail.fulfilled]: (state, { payload }) => {
-      console.log("Show Detail Fetched Successfully!");
+      // console.log("Show Detail Fetched Successfully!");
       return { ...state, selectMovieOrShow: payload };
     },
     /////////////////////////////////////////////
     [fetchShowSeasonDetail.fulfilled]: (state, { payload }) => {
-      console.log("Seasons Details Fetched");
+      // console.log("Seasons Details Fetched");
       return { ...state, seasons: payload };
     },
     // /////////////////////////////////////////////

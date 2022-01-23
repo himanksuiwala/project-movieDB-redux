@@ -1,25 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit"; 
+// import { createSlice } from "@reduxjs/toolkit"; 
 
-const initialState = {
-    season:[]
-}
+// const initialState = {
+//     season:[]
+// }
 
-const seasonSlice = createSlice({
+// const seasonSlice = createSlice({
 
-    name:"seasons",
-    initialState,
-    reducers:{
+//     name:"seasons",
+//     initialState,
+//     reducers:{
 
-        setSeason:(state,action)=>{
-            state.season = action.payload;
-        }
+//         setSeason:(state,action)=>{
+//             state.season = action.payload;
+//         }
 
-    }
+//     }
 
-})
+// })
 
-export const {setSeason} = seasonSlice.actions;
+// export const {setSeason} = seasonSlice.actions;
 
-export const selectSeasons = (state) => state.seasons.season;
+// export const selectSeasons = (state) => state.seasons.season;
 
-export default seasonSlice.reducer;
+// export default seasonSlice.reducer;

@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { getSelectedMovieOrShow } from "./features/movie/movieSlice";
+import { getSelectedMovieOrShow } from "../features/movie/movieSlice";
 import styled from "styled-components";
 
 export const DetailCard = () => {
@@ -17,7 +17,6 @@ export const DetailCard = () => {
           <h4>Release Date</h4>
           <p>{data.release_date || data.first_air_date}</p>
         </div>
-        {/* <hr /> */}
         {data.last_air_date ? (
           <>
             {" "}
@@ -30,7 +29,6 @@ export const DetailCard = () => {
         ) : (
           <></>
         )}
-        {/* <hr/> */}
         {data.status ? (
           <>
             {" "}
@@ -48,14 +46,12 @@ export const DetailCard = () => {
           <h4>Avg. Runtime</h4>
           <p>{data.runtime || data.episode_run_time} minutes</p>
         </div>
-
         <hr />
-
         <div id="origin">
           <h4>Countries of origin</h4>
           {data &&
             data.production_countries.map((item) => {
-              return <p>{item.name}</p>;
+              return <p key={item.iso_3166_1}>{item.name}</p>;
             })}
         </div>
         <hr />
@@ -63,7 +59,7 @@ export const DetailCard = () => {
           <h4>Language</h4>
           {data &&
             data.spoken_languages.map((item) => {
-              return <p>{item.english_name}</p>;
+              return <p key={item.iso_639_1}>{item.english_name}</p>;
             })}
         </div>
         <hr />
@@ -71,7 +67,7 @@ export const DetailCard = () => {
           <h4>Production Companies</h4>
           {data &&
             data.production_companies.map((item) => {
-              return <p>{item.name}</p>;
+              return <p key={item.id}>{item.name}</p>;
             })}
         </div>
         <hr />
@@ -91,9 +87,11 @@ const DetailContainer = styled.div`
   #origin {
     display: flex;
     height: 40px;
-    ${"" /* padding:12px 0px 0px 0px; */}
-    p,h4 {
+
+    p,
+    h4 {
       padding: 5px;
+      line-height: 100%;
     }
   }
 `;

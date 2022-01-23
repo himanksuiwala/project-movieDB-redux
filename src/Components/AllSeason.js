@@ -1,34 +1,23 @@
 import React from "react";
 import { useParams } from "react-router";
 import { useDispatch } from "react-redux";
-import styled, { StyledComponent } from "styled-components";
-// import { setDetails } from "../features/movie/movieSlice";
+import styled from "styled-components";
 import { useSelector } from "react-redux";
-// import { getAllSeasons } from "../features/movie/movieSlice";
-import { useLocation } from "react-router";
 import { useEffect } from "react";
-import { useState } from "react";
-import { Dispatch } from "react";
-import {
-  getSelectedMovieOrShow,
-  getAllSeasons,
-} from "../features/movie/movieSlice";
-import {
-  fetchShowSeasonDetail,
-  fetchAsyncShowDetail,
-} from "../features/movie/movieSlice";
+import { getSelectedMovieOrShow } from "../features/movie/movieSlice";
+import { fetchAsyncShowDetail } from "../features/movie/movieSlice";
 
 const AllSeason = (props) => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  // const [seasonList, setSeasonList] = useState([]);
-  let logged = useLocation();
   const data = useSelector(getSelectedMovieOrShow);
   const seasonList = data.seasons;
   // const baseUrl = "https://image.tmdb.org/t/p/original";
   const baseUrl = "https://ik.imagekit.io/1aafk6gx3bk/poster-image/";
+
   useEffect(() => {
     dispatch(fetchAsyncShowDetail(id));
+    window.scrollTo(0, 0);
   }, []);
 
   function truncate(str, n) {
@@ -38,7 +27,7 @@ const AllSeason = (props) => {
   return (
     <Container>
       <TopContainer>
-        <Poster>{<img src={`${baseUrl}/${data.poster_path}`} />}</Poster>
+        <Poster>{<img src={`${baseUrl}${data.poster_path}`} />}</Poster>
         <Detail>
           <div className="header">
             <h1>{data.title || data.original_name} </h1>
@@ -52,15 +41,15 @@ const AllSeason = (props) => {
       {seasonList &&
         seasonList.map((i) => {
           var year = new Date(i.air_date).getFullYear();
-          {
-            /* console.log("l", seasonList[0]); */
-          }
           return (
-            <>
-              <SeasonContainer>
-                <AllseasonList>
+            <div key={i.id}>
+              <SeasonContainer key={i.id}>
+                <AllseasonList key={i.id}>
                   <div className="poster">
-                    <img src={`${baseUrl}${i.poster_path}`} />
+                    <img
+                      key={i.id}
+                      src={`${baseUrl}tr:w-120px${i.poster_path}`}
+                    />
                   </div>
                   <div className="side-container">
                     <div className="header">
@@ -75,14 +64,13 @@ const AllSeason = (props) => {
                       </div>
                     </div>
                     <div className="detail">
-                      {/* <p>{i.overview}</p> */}
                       <p>{truncate(i?.overview, 150)}</p>
                     </div>
                   </div>
                 </AllseasonList>
                 <hr></hr>
               </SeasonContainer>
-            </>
+            </div>
           );
         })}
     </Container>
@@ -119,8 +107,7 @@ const AllseasonList = styled.div`
   }
   .year-season {
     margin-top: 5px;
-    ${"" /* margin-left:8px; */}
-    font-weight:500;
+    font-weight: 500;
   }
   .poster {
     max-width: 120px;
@@ -139,8 +126,7 @@ const Detail = styled.div`
   .header {
     margin-top: 12px;
     margin-left: 17px;
-    ${"" /* display:flex; */}
-    margin-bottom:20px;
+    margin-bottom: 20px;
   }
   .release {
     margin-top: 12px;
@@ -149,16 +135,13 @@ const Detail = styled.div`
   }
 `;
 const Container = styled.div`
-  ${"" /* background:pink; */}
-  background:rgb(219,231,231);
+  background: rgb(219, 231, 231);
   padding: 0 calc(3.5vw + 10px);
 `;
 
 const TopContainer = styled.div`
-  ${"" /* background:rgb(219,231,231); */}
-  height:115px;
+  height: 115px;
   margin-top: 5px;
-
   display: flex;
 `;
 

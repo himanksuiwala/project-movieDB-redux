@@ -2,19 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import styled from "styled-components";
-import "./Row";
+import "../public/Detail.css";
 import Spinner from "react-spinkit";
 import Youtube from "react-youtube";
-import { DetailCard } from "./DetailCard";
-import "./Detail.css";
+import { DetailCard } from "../Components/DetailCard";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAsyncMoviesDetail,
   getSelectedMovieOrShow,
-  setDetails,
-} from "./features/movie/movieSlice";
-import { setCast } from "./features/movie/castSlice";
-import Cast from "./detail-components/Cast";
+} from "../features/movie/movieSlice";
+import { setCast } from "../features/movie/castSlice";
+import Cast from "../Components/Cast";
 const MovieDetail = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -32,8 +30,21 @@ const MovieDetail = () => {
       autoplay: 0,
     },
   };
+  const director = crew.filter((item) => item.job === "Director");
+  const writers = crew.filter(
+    (item) => item.job === "Writing" || item.department == "Writing"
+  );
+  const trailers = trailer.filter((item) => item.type === "Trailer");
+  const genre = detail.genres;
+  var year = new Date(detail.release_date).getFullYear();
 
-  /////////////////FOR FETCHING CREDITS AND CAST RELATED DETAILS////////////////////
+  function doctitle(title) {
+    document.title = `${title} (Movie)`;
+  }
+
+  {
+    detail && doctitle(detail.original_title || detail.name);
+  }
 
   const fetchData = async () => {
     const response = await axios
@@ -43,7 +54,6 @@ const MovieDetail = () => {
       .catch((e) => {
         console.log("error in fetching");
       });
-    // console.log("CAST:", response.data);
     dispatch(setCast(response.data.cast));
     setCrew(response.data.crew);
   };
@@ -56,25 +66,17 @@ const MovieDetail = () => {
       .catch((e) => {
         console.log("error in fetching");
       });
-    setTrailer(response.data.results[0]?.key);
+    setTrailer(response.data.results);
   };
 
   useEffect(() => {
     fetchData();
     fetchTrailer();
     dispatch(fetchAsyncMoviesDetail(id));
-    // dispatch(fetchAsyncCasts(id));
     setTimeout(() => setLoading(false), 2000);
+    window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
   }, [dispatch, id]);
-
-  const director = crew.filter((item) => item.job === "Director");
-  const writers = crew.filter(
-    (item) => item.job === "Writing" || item.department == "Writing"
-  );
-
-  const genre = detail.genres;
-
-  var year = new Date(detail.release_date).getFullYear();
 
   while (loading) {
     return (
@@ -90,16 +92,16 @@ const MovieDetail = () => {
     <>
       <Container>
         <div className="background">
-          <img src={`${baseUrl}${detail.backdrop_path}`} />
+          <img key={detail.id} src={`${baseUrl}${detail.backdrop_path}`} />
         </div>
         <Detail>
           <ImageTitle>
-            <img src={`${baseUrl}${detail.poster_path}`} />
+            <img key={detail.id} src={`${baseUrl}${detail.poster_path}`} />
           </ImageTitle>
           <Description>
             <Title>
               <div className="title">
-                <h2> {detail.original_title} </h2>
+                <h2> {detail.title || detail.original_title} </h2>
               </div>
               <div className="year">{<p>({year})</p>}</div>
             </Title>
@@ -114,7 +116,7 @@ const MovieDetail = () => {
                 {detail.genres &&
                   genre.map((g) => {
                     return (
-                      <div className="genre-type">
+                      <div key={g.id} className="genre-type">
                         <span>•</span>
                         <span>{g.name}</span>
                       </div>
@@ -140,7 +142,7 @@ const MovieDetail = () => {
                 <div className="writer">
                   <h4>Writers</h4>
                   {writers.map((item) => {
-                    return <span>{item.name}</span>;
+                    return <span key={item.id}>{item.name}</span>;
                   })}
                 </div>
               </div>
@@ -156,14 +158,18 @@ const MovieDetail = () => {
             </div>
           </Container2>
           <DetailCard />
-          <Container3>
-            <div className="trailer-title">
-              <h1>Trailer</h1>
-            </div>
-            <div className="trailer">
-              <Youtube videoId={trailer} opts={opts} />
-            </div>
-          </Container3>
+          {trailers[0] ? (
+            <Container3>
+              <div className="trailer-title">
+                <h1>Trailer</h1>
+              </div>
+              <div className="trailer">
+                <Youtube videoId={trailers[0].key} opts={opts} />
+              </div>
+            </Container3>
+          ) : (
+            ""
+          )}
         </Padder>
       </LowerContainer>
     </>
