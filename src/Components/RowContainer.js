@@ -19,15 +19,12 @@ import {
   getHotstarTV,
 } from "../features/movie/movieSlice";
 
-// const Row = lazy(() => import("./Row"));
-
+const types = ["MOVIE", "TV"];
 export default function RowContainer() {
   const [style, setStyle] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [tvloading, movieLoading] = useState(true);
-  const [prime_tv, setPrime_tv] = useState(false);
-  const [netflix_tv, setNetflix_tv] = useState(false);
-  const [hotstar_tv, setHotstar_tv] = useState(false);
+  const [active, setActive] = useState(types[1]);
+  const [netflix_tv, setNetflix_tv] = useState(types[1]);
+  const [hotstar_tv, setHotstar_tv] = useState(types[1]);
   const dispatch = useDispatch();
   const showdata = useSelector(getNetflixTV);
   const netflix_movie = useSelector(getNetflixMovie);
@@ -38,31 +35,8 @@ export default function RowContainer() {
   const hotstar_tvdata = useSelector(getHotstarTV);
 
   useEffect(() => {
-    // setTimeout(() => setLoading(false), 2000)
     window.history.scrollRestoration = "manual";
   });
-
-  function handleClick(e) {
-    // classList.toggle("strikeThrough");
-    e.target.classList.toggle("strikeThrough");
-    console.log("I'm Clc", e);
-  }
-
-  function tvsetter(e) {
-    setPrime_tv(true);
-    // e.target.classList.toggle("strikeThrough");
-  }
-  function moviesetter(e) {
-    tvclick(e);
-    // e.target.classList.toggle("strikeThrough");
-    // e.target.classList.toggle("none");
-  }
-
-  // function antihandleClick(e) {
-  //   classList.toggle("strikeThrough");
-  //   // e.target.classList.toggle("none");
-  //   console.log("I'm was ");
-  // }
 
   return (
     <MainContainer>
@@ -74,72 +48,19 @@ export default function RowContainer() {
           <div className="contentprovider-header">
             <h2>PRIME VIDEO</h2>
           </div>
-          <div className="toggle">
-            <span
-              className="tochange"
-              onClick={(e) => {
-                setPrime_tv(true);
-                // tvsetter(e);
-                // tvclick(e);
-                // antimovieclick(e)
-                // antihandleClick(e);
-                // setTimeout(() => tvloading(false), 3000);
-                // setStyle("cont2");
-              }}
-            >
-              TV
-            </span>
-            <span
-              className="tochange"
-              onClick={(e) => {
-                setPrime_tv(false);
-                // moviesetter(e);
-                // handleClick(e);
-                // antitvclick(e)
-                // movieclick(e);
-                // antihandleClick(e);
-                // setTimeout(() => movieLoading(false), 3000);
-
-                // console.log("Tv Button Cliked");
-                // setTimeout(() => setLoading(false), 2000)
-                // setStyle("cont2");
-              }}
-            >
-              MOVIE
-            </span>
+          <div className="content-type-selector">
+            {types.map((type) => (
+              <Tab
+                key={type}
+                active={active === type}
+                onClick={() => setActive(type)}
+              >
+                <h4>{type}</h4>
+              </Tab>
+            ))}
           </div>
 
-          {/* {prime_tv ? 
-          (
-            loading?
-              <Spinner name="circle" />:
-            <Row title="Prime Videos" adata={primedata.results} type="tv" />
-          ) : (
-            loading?<Spinner name="circle" />:
-            <Row
-              title="Prime Videos Moive"
-              adata={primemovie.results}
-              type="movie"
-            />
-          )} */}
-
-          {/* {prime_tv ? (
-            !tvloading ? (
-              <Spinner name="ball-spin-fade-loader" />
-            ) : (
-              <Row title="Prime Videos" adata={primedata.results} type="tv" />
-            )
-          ) : !movieLoading ? (
-            <Spinner name="ball-spin-fade-loader" />
-          ) : (
-            <Row
-              title="Prime Videos Moive"
-              adata={primemovie.results}
-              type="movie"
-            />
-          )} */}
-
-          {prime_tv ? (
+          {active == "TV" ? (
             <Row title="Prime Videos" adata={primedata.results} type="tv" />
           ) : (
             <Row
@@ -155,25 +76,19 @@ export default function RowContainer() {
             <div className="contentprovider-header">
               <h2>NETFLIX</h2>
             </div>
-            <div className="toggle">
-              <span
-                onClick={() => {
-                  setNetflix_tv(true);
-                  handleClick;
-                }}
-              >
-                TV
-              </span>
-              <span
-                onClick={() => {
-                  setNetflix_tv(false);
-                }}
-              >
-                Movie
-              </span>
-            </div>
 
-            {netflix_tv ? (
+            <div className="content-type-selector">
+              {types.map((type) => (
+                <Tab
+                  key={type}
+                  active={netflix_tv === type}
+                  onClick={() => setNetflix_tv(type)}
+                >
+                  <h4>{type}</h4>
+                </Tab>
+              ))}
+            </div>
+            {netflix_tv == "TV" ? (
               <Row title="Netflix TV" adata={showdata.results} type="tv" />
             ) : (
               <Row
@@ -190,24 +105,18 @@ export default function RowContainer() {
             <div className="contentprovider-header">
               <h2>HOTSTAR</h2>
             </div>
-            <div className="toggle">
-              <span
-                onClick={() => {
-                  setHotstar_tv(true);
-                }}
-              >
-                TV
-              </span>
-              <span
-                onClick={() => {
-                  setHotstar_tv(false);
-                }}
-              >
-                Movie
-              </span>
+            <div className="content-type-selector">
+              {types.map((type) => (
+                <Tab
+                  key={type}
+                  active={hotstar_tv === type}
+                  onClick={() => setHotstar_tv(type)}
+                >
+                  <h4>{type}</h4>
+                </Tab>
+              ))}
             </div>
-
-            {hotstar_tv ? (
+            {hotstar_tv == "TV" ? (
               <Row
                 title="Hotstar TV"
                 adata={hotstar_tvdata.results}
@@ -224,15 +133,18 @@ export default function RowContainer() {
         </LazyLoad>
 
         {/* <Suspense fallback={<div>Loading...</div>}> */}
-        <LazyLoad>
-          <Row
-            title="Top Rated Movies"
-            adata={moviedata.results}
-            type="movie"
-          />
+        <LazyLoad offset={50}>
+          <TopRated>
+            <div className="contentprovider-header">
+              <h2>Top Rated Movies</h2>
+            </div>
+            <Row
+              title="Top Rated Movies"
+              adata={moviedata.results}
+              type="movie"
+            />
+          </TopRated>
         </LazyLoad>
-
-        {/* </Suspense> */}
 
         {/* <Row title="Action Movies" fetchUrl={requests.fetchActionMovies} type='movie' />  */}
         {/* <Row title="Comedy Movies" fetchUrl={requests.fetchComedyMovies} type='movie' /> */}
@@ -244,11 +156,46 @@ export default function RowContainer() {
     </MainContainer>
   );
 }
+const TopRated = styled.div`
+  margin-top: 20px;
+`;
+
+const Tab = styled.button`
+  border-radius: 3px;
+  padding: 10px 30px;
+  margin: 4px 5px 4px 5px;
+  cursor: pointer;
+  opacity: 0.6;
+  background: pink;
+  border: 0;
+  outline: 0;
+  h4 {
+    font-size: 15px;
+    ${"" /* padding:1px; */}
+  }
+
+  transition: ease border-bottom 250ms;
+  ${({ active }) =>
+    active &&
+    `
+  background-color:green;
+  font-color:white
+  h4{
+    color:red
+  }
+`}
+`;
 
 const MainContainer = styled.div`
   background-color: rgb(19, 19, 19);
   padding: 0 calc(2vw + 10px);
   color: white;
+
+  .content-type-selector {
+    display: flex;
+    margin-left: 41px;
+  }
+
   .header {
     padding: 50px 0px 10px 30px;
     display: flex;
@@ -300,11 +247,17 @@ const MainContainer = styled.div`
   }
 `;
 
-const PrimeVideoContainer = styled.div``;
+const PrimeVideoContainer = styled.div`
+  margin-top: 20px;
+`;
 
-const NetflixContainer = styled.div``;
+const NetflixContainer = styled.div`
+  margin-top: 20px;
+`;
 
-const HotstarContainer = styled.div``;
+const HotstarContainer = styled.div`
+  margin-top: 20px;
+`;
 
 const AppLoading = styled.div`
   display: grid;

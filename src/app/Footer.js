@@ -90,6 +90,7 @@ const Signature = styled.div`
 const Container = styled.div`
   background: rgb(9, 11, 19);
   height: 32vh;
+ 
   padding: 0 calc(2vw + 10px);
   h3 {
     line-height: 100%;
@@ -105,7 +106,7 @@ const Container = styled.div`
 const FooterCard = styled.div`
   background-color: rgb(9, 11, 19);
   color: white;
-  height: 30vh;
+  height: 50vh;
   padding: 10px;
 `;
 

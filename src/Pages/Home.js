@@ -14,6 +14,7 @@ import {
   fetchAsyncHOTSTARtv,
 } from "../features/movie/movieSlice";
 
+
 export default function Home() {
   document.title = `MovieDB 🍿`;
   const dispatch = useDispatch();
@@ -29,6 +30,9 @@ export default function Home() {
     window.scrollTo(0, 0);
     return () => {};
   }, [dispatch]);
+
+  console.log("j",process.env)
+
   return (
     <Container>
       <SearchComponent />

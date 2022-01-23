@@ -11,6 +11,9 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { NotFound } from "./Pages/NotFound";
 
 export default function App() {
+
+  // console.log(process.env.REACT_APP_BART_API_KEY)
+  // reportWebVitals(console.log);
   return (
     <div className="App">
       <Router>
