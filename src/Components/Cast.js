@@ -30,11 +30,13 @@ const Cast = () => {
                           src={`${baseUrl}/tr:w-175${i.profile_path}`}
                         />
                       ) : (
-                        <img
-                          className="photo"
-                          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                          key={i.id}
-                        />
+                        <NotAvailable>
+                          <img
+                            className="photo"
+                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                            key={i.id}
+                          />
+                        </NotAvailable>
                       )}
                     </div>
                     <div className="actor-name">
@@ -53,6 +55,13 @@ const Cast = () => {
   );
 };
 export default Cast;
+
+const NotAvailable = styled.div`
+  img {
+    width: 170px;
+    height: 262px;
+  }
+`;
 
 const Container = styled.div`
   .container-title {
