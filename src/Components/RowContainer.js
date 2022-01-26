@@ -71,7 +71,7 @@ export default function RowContainer() {
           )}
         </PrimeVideoContainer>
 
-        <LazyLoad>
+        <LazyLoad offset={150}>
           <NetflixContainer>
             <div className="contentprovider-header">
               <h2>NETFLIX</h2>
@@ -100,7 +100,7 @@ export default function RowContainer() {
           </NetflixContainer>
         </LazyLoad>
 
-        <LazyLoad>
+        <LazyLoad offset={150}>
           <HotstarContainer>
             <div className="contentprovider-header">
               <h2>HOTSTAR</h2>
