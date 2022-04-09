@@ -9,10 +9,10 @@ import { Search } from "./Pages/Search";
 import AllSeason from "./Components/AllSeason";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { NotFound } from "./Pages/NotFound";
-// const dotenv = require("dotenv");
+
 export default function App() {
 
-  console.log(dotenv.config())
+
   return (
     <div className="App">
       <Router>
