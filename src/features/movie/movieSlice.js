@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 // const API_KEY = "74de71d03e661d70414e23b100e51515";
-const API_KEY = process.env.API_KEY
+                      
+const API = process.env.API_KEY
 
 /////////////////////////////////////////////////////////////////
 export const fetchAsyncSearch = createAsyncThunk(
   "movies/searchData",
   async (text) => {
     const response = await axios.get(`
-      https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=en-US&query=${text} h&page=1&include_adult=false
+      https://api.themoviedb.org/3/search/multi?api_key=${API}&language=en-US&query=${text} h&page=1&include_adult=false
       `);
     return response.data;
   }
@@ -18,7 +19,7 @@ export const fetchAsyncMovies = createAsyncThunk(
   "movies/fetchAsyncMovies",
   async () => {
     const response = await axios.get(`
-      https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US`);
+      https://api.themoviedb.org/3/movie/top_rated?api_key=${API}&language=en-US`);
     return response.data;
   }
 );
@@ -26,7 +27,7 @@ export const fetchAsyncMoviesDetail = createAsyncThunk(
   "movies/fetchAsyncMoviesDetail",
   async (id) => {
     const response = await axios.get(`
-      https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`);
+      https://api.themoviedb.org/3/movie/${id}?api_key=${API}&language=en-US`);
     return response.data;
   }
 );
@@ -35,7 +36,7 @@ export const fetchAsyncNETFLIXtv = createAsyncThunk(
   "TV/fetchAsyncNETFLIX",
   async () => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_watch_providers=8&watch_region=IN`
+      `https://api.themoviedb.org/3/discover/tv?api_key=${API}&with_watch_providers=8&watch_region=IN`
     );
     return response.data;
   }
@@ -44,7 +45,7 @@ export const fetchAsyncNETFLIXmovie = createAsyncThunk(
   "MOVIE/fetchAsyncNETFLIX",
   async () => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_watch_providers=8&watch_region=IN`
+      `https://api.themoviedb.org/3/discover/movie?api_key=${API}&with_watch_providers=8&watch_region=IN`
     );
     return response.data;
   }
@@ -55,7 +56,7 @@ export const fetchAsyncPRIMEtv = createAsyncThunk(
   "TV/fetchAsyncPRIMEVIDEOS",
   async () => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_watch_providers=119&watch_region=IN`
+      `https://api.themoviedb.org/3/discover/tv?api_key=${API}&with_watch_providers=119&watch_region=IN`
     );
     return response.data;
   }
@@ -65,7 +66,7 @@ export const fetchAsyncPRIMEmovie = createAsyncThunk(
   "MOVIE/fetchAsyncPRIMEVIDEOS",
   async () => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_watch_providers=119&watch_region=IN`
+      `https://api.themoviedb.org/3/discover/movie?api_key=${API}&with_watch_providers=119&watch_region=IN`
     );
     return response.data;
   }
@@ -76,7 +77,7 @@ export const fetchAsyncHOTSTARmovie = createAsyncThunk(
   "MOVIE/fetchAsyncHOTSTAR",
   async () => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_watch_providers=122&watch_region=IN`
+      `https://api.themoviedb.org/3/discover/movie?api_key=${API}&with_watch_providers=122&watch_region=IN`
     );
     return response.data;
   }
@@ -86,7 +87,7 @@ export const fetchAsyncHOTSTARtv = createAsyncThunk(
   "TV/fetchAsyncHOTSTAR",
   async () => {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&with_watch_providers=122&watch_region=IN`
+      `https://api.themoviedb.org/3/discover/tv?api_key=${API}&with_watch_providers=122&watch_region=IN`
     );
     return response.data;
   }
@@ -96,7 +97,7 @@ export const fetchAsyncShowDetail = createAsyncThunk(
   "movies/fetchAsyncShowDetail",
   async (id) => {
     const response = await axios.get(`
-      https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}&language=en-US`);
+      https://api.themoviedb.org/3/tv/${id}?api_key=${API}&language=en-US`);
     return response.data;
   }
 );
@@ -104,7 +105,7 @@ export const fetchShowSeasonDetail = createAsyncThunk(
   "movies/fetchShowSeasonDetail",
   async (id) => {
     const response = await axios.get(`
-      https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}&language=en-US`);
+      https://api.themoviedb.org/3/tv/${id}?api_key=${API}&language=en-US`);
     return response.data.seasons;
   }
 );
