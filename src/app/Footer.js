@@ -106,7 +106,7 @@ const Container = styled.div`
 const FooterCard = styled.div`
   background-color: rgb(9, 11, 19);
   color: white;
-  height: 50vh;
+  height: 35vh;
   padding: 10px;
 `;
 

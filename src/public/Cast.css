@@ -4,6 +4,10 @@
   margin: 10px;
 }
 
+
+ 
+
+
 .actor-name {
   font-weight: bold;
   padding: 5px;
@@ -34,3 +38,4 @@
 .castcontainer::-webkit-scrollbar {
   display: none;
 }
+

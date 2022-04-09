@@ -31,8 +31,6 @@ export default function Home() {
     return () => {};
   }, [dispatch]);
 
-  console.log("j",process.env)
-
   return (
     <Container>
       <SearchComponent />

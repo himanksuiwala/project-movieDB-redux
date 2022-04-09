@@ -1,0 +1,3 @@
+require('dotenv/config')
+// require('../src/features/movie/movieSlice')
+require('../src/App')
