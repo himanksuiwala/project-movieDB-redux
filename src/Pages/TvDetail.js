@@ -49,7 +49,7 @@ export default function TvDetail() {
   const fetchData = async () => {
     const response = await axios
       .get(
-        `https://api.themoviedb.org/3/tv/${id}/credits?api_key=74de71d03e661d70414e23b100e51515&language=en-US`
+        `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${process.env.REACT_APP_SECRET}&language=en-US`
       )
       .catch((e) => {
         console.log("error in fetching");
@@ -60,7 +60,7 @@ export default function TvDetail() {
   const fetchTrailer = async (id) => {
     const response = await axios
       .get(
-        `https://api.themoviedb.org/3/tv/${id}/videos?api_key=74de71d03e661d70414e23b100e51515&language=en-US`
+        `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${process.env.REACT_APP_SECRET}&language=en-US`
       )
       .catch((e) => {
         console.log("error in fetching");
