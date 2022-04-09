@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import Spinner from "react-spinkit";
 import { setsearchData } from "../features/movie/searchSlice";
 import { selectSearchData } from "../features/movie/searchSlice";
-const API_KEY = "74de71d03e661d70414e23b100e51515";
 
 export const Search = () => {
   const [loading, setLoading] = useState(true);
@@ -22,7 +21,7 @@ export const Search = () => {
   const fetchsearch = async (term) => {
     const response = await axios
       .get(
-        `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=en-US&query=${term}&page=1&include_adult=false `
+        `https://api.themoviedb.org/3/search/multi?api_key=${process.env.REACT_APP_SECRET}&language=en-US&query=${term}&page=1&include_adult=false `
       )
       .catch((e) => {
         console.log("Error fetching Search Data");

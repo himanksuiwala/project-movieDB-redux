@@ -49,7 +49,7 @@ const MovieDetail = () => {
   const fetchData = async () => {
     const response = await axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id}/credits?api_key=74de71d03e661d70414e23b100e51515&language=en-US`
+        `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.REACT_APP_SECRET}&language=en-US`
       )
       .catch((e) => {
         console.log("error in fetching");
@@ -61,7 +61,7 @@ const MovieDetail = () => {
   const fetchTrailer = async () => {
     const response = await axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=74de71d03e661d70414e23b100e51515&language=en-US`
+        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${process.env.REACT_APP_SECRET}&language=en-US`
       )
       .catch((e) => {
         console.log("error in fetching");
