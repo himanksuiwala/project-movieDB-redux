@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-require('dotenv').config()
-                      
+require('dotenv').config()     
 const API = process.env.REACT_APP_SECRET
 
 /////////////////////////////////////////////////////////////////
